@@ -47,6 +47,8 @@ jobs:
                       dst.write_bytes(src.read())
           print('aiKBron PRO 1.4 offline UI restored')
           PY
+      - name: Fix Java WebChrome callback import
+        run: sed -i '/import android.webkit.WebChromeClient;/a import android.webkit.ValueCallback;' app/src/main/java/com/caenterprise/aikbron/RemoteActivity.java
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.12"
