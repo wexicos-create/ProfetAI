@@ -1,0 +1,2 @@
+# aiKBron PRO — Android 15 (remote build)
+This isolated Android WebView client launches the aiKBron Python backend application with Agents, Skills, GitHub/Vercel and local terminal. The backend is NOT shipped inside the APK and must be hosted separately and configured with providers. The manifest targets Android API 35. Launcher icon is a vector approximation of aiKBron's supplied image; the full original launcher PNG remains in the complete downloadable source archive.
