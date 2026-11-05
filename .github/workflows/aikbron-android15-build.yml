@@ -30,6 +30,23 @@ jobs:
           fi
           test -f "$ANDROID_HOME/platforms/android-35/android.jar"
           test -f "$ANDROID_HOME/build-tools/35.0.0/apksigner"
+      - name: Restore verified aiKBron offline Android sources
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, lzma, io, tarfile
+          data=base64.b64decode(Path('ci_source_payload.b64').read_text().strip(),validate=True)
+          archive=lzma.decompress(data)
+          with tarfile.open(fileobj=io.BytesIO(archive),mode='r:') as tar:
+              for member in tar:
+                  path=Path(member.name)
+                  if not member.isfile() or path.is_absolute() or '..' in path.parts: raise RuntimeError('Unsafe file path')
+                  dst=Path.cwd()/path
+                  dst.parent.mkdir(parents=True,exist_ok=True)
+                  with tar.extractfile(member) as src:
+                      dst.write_bytes(src.read())
+          print('aiKBron PRO 1.4 offline UI restored')
+          PY
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.12"
