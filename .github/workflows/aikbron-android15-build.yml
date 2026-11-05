@@ -20,9 +20,16 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
-      - name: Install Android SDK API 35 and build-tools
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Locate Android SDK API 35 and build-tools
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms/" || true
+          ls "$ANDROID_HOME/build-tools/" || true
+          if [ ! -f "$ANDROID_HOME/platforms/android-35/android.jar" ] || [ ! -f "$ANDROID_HOME/build-tools/35.0.0/apksigner" ]; then
+            yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" || true
+          fi
+          test -f "$ANDROID_HOME/platforms/android-35/android.jar"
+          test -f "$ANDROID_HOME/build-tools/35.0.0/apksigner"
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.12"
